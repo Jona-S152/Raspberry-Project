@@ -20,17 +20,17 @@ class Prueba():
         self.cantidad_producto = 0
         #Configuración panel del titulo o filtro
         self.panelFiltro = customtkinter.CTkFrame(self.app, corner_radius=10)
-        self.panelFiltro.grid(row=0, column=0, padx=(8, 0), pady=(10, 5))
+        self.panelFiltro.grid(row=0, column=0, padx=(10, 0), pady=(10, 5))
         #Label del titulo
-        self.titulo = customtkinter.CTkLabel(master = self.panelFiltro, text="PRODUCTOS", height=100, width=545).pack()
+        self.titulo = customtkinter.CTkLabel(master = self.panelFiltro, text="PRODUCTOS", height=100, width=506).pack()
         #Configuración panel del carrito
         self.panelCarrito = customtkinter.CTkFrame(self.app, corner_radius=10)
         self.panelCarrito.grid(row=0, column=1, padx=(0, 1), pady=(10, 5))
         #Label del titulo
-        self.titulo = customtkinter.CTkLabel(master = self.panelCarrito, text="CARRITO", height=100, width=220).pack()
+        self.titulo = customtkinter.CTkLabel(master = self.panelCarrito, text="CARRITO", height=100, width=260).pack()
 
         #Panel para mostrar los productos de la base de datos
-        self.panelProductos = customtkinter.CTkScrollableFrame(master = self.app, height=330, width=523)
+        self.panelProductos = customtkinter.CTkScrollableFrame(master = self.app, height=330, width=483)
         self.panelProductos.grid(row=1, column=0, padx=(15, 5), pady=(5, 10))
         
         #Metodo para abrir el spinbox para seleccionar la cantidad del producto
@@ -90,24 +90,39 @@ class Prueba():
                 master = self.panelProductos)
             nombre = customtkinter.CTkLabel(
                 master = panel, 
-                text=producto.name).pack(pady=(1, 0))
+                text=producto.name).pack(pady=(0, 1))
             precio = customtkinter.CTkLabel(
                 master = panel, 
-                text=producto.price).pack(pady=(0, 1))
+                text=f"${producto.price}").pack(pady=(0, 1))
             comprar = customtkinter.CTkButton(
                 master = panel, 
                 text="Seleccionar",
                 height=35, 
                 command = lambda p=producto: getCantidad(p)).pack()#GetCantidad obtiene el objeto(producto) seleccionado y lo envia como parametro para la ventana de seleccion de cantidad
-            panel.grid(row=contador//3, column=contador%3, padx=15, pady=15)
+            panel.grid(row=contador//3, column=contador%3, padx=10, pady=10)
 
             contador += 1
         
         self.panelListaProductos = customtkinter.CTkFrame(master = self.app, height=249, width=220)
         self.panelListaProductos.grid(row=1, column=1, padx=(0, 1), pady=(5, 10))
 
-        self.panelListaProductosScroll = customtkinter.CTkScrollableFrame(master = self.panelListaProductos, height=240, width=198)
-        self.panelListaProductosScroll.grid(row=0, column=0, padx=(0, 1), pady=(0, 10))
+        self.panelEncabezado = customtkinter.CTkFrame(master = self.panelListaProductos)
+        self.panelEncabezado.grid(row=0, column=0, padx=0, pady=0)
+
+        self.lblNombreProducto = customtkinter.CTkLabel(master = self.panelEncabezado, text="Producto", height=40, width=95)
+        self.lblNombreProducto.grid(row=0, column=0, padx=0, pady=0)
+
+        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Cant.", height=40, width=55)
+        self.lblNombreCantidad.grid(row=0, column=1, padx=0, pady=0)
+
+        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Precio", height=40, width=45)
+        self.lblNombreCantidad.grid(row=0, column=2, padx=0, pady=0)
+
+        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Total", height=40, width=65)
+        self.lblNombreCantidad.grid(row=0, column=3, padx=0, pady=0)
+
+        self.panelListaProductosScroll = customtkinter.CTkScrollableFrame(master = self.panelListaProductos, height=200, width=238)
+        self.panelListaProductosScroll.grid(row=1, column=0, padx=(0, 1), pady=(0, 10))
 
         #Volver al Login
         def button_volver():
@@ -115,13 +130,10 @@ class Prueba():
                 self.app.destroy()
             volver = Vo.VOpciones()
 
-        # Use CTkButton instead of tkinter Button
         self.buttonConfirmar = customtkinter.CTkButton(master=self.panelListaProductos, text="Confirmar compra", height=35, width=198)
-        #self.button.place(relx=0, rely=0, anchor=tkinter.CENTER)
-        self.buttonConfirmar.grid(row=1, column=0, padx=(0, 1), pady=(0, 5))
+        self.buttonConfirmar.grid(row=2, column=0, padx=(0, 1), pady=(0, 5))
 
         self.button = customtkinter.CTkButton(master=self.panelListaProductos, text="Salir", height=35, width=198, command=button_volver)
-        #self.button.place(relx=0, rely=0, anchor=tkinter.CENTER)
-        self.button.grid(row=2, column=0, padx=(0, 1), pady=(0, 5))
+        self.button.grid(row=3, column=0, padx=(0, 1), pady=(0, 5))
 
         self.app.mainloop()

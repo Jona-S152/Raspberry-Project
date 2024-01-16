@@ -2,6 +2,7 @@ import tkinter
 import customtkinter
 import requests
 import VentanaOpciones as Vo 
+import EstudiantesApi as Ea 
 
 class VTarjeta():
     def __init__(self):
@@ -40,33 +41,50 @@ class VTarjeta():
             self.panelDatosEstudiante = customtkinter.CTkFrame(self.ventanaDatos)
             self.panelDatosEstudiante.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-            self.lblDatos = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Datos del estudiante")
-            self.lblDatos.grid(row=0, column=0, padx=10, pady=(10, 0))
+            clsEstudiante = Ea.Student()
 
-            self.lblNombre = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Nombre:")
-            self.lblNombre.grid(row=1, column=0, padx=10, pady=(10, 5))
+            estudiante = clsEstudiante.getStudentByCod(value)
 
-            self.lblNombreVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text="")
-            self.lblNombreVar.grid(row=1, column=1, padx=10, pady=(10, 5))
+            print(estudiante)
 
-            self.lblApellido = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Apellido:")
-            self.lblApellido.grid(row=2, column=0, padx=10, pady=(5, 5))
+            if(estudiante != None):
+                self.lblDatos = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Datos del estudiante")
+                self.lblDatos.grid(row=0, column=0, padx=10, pady=(10, 0))
 
-            self.lblApellidoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text="")
-            self.lblApellidoVar.grid(row=2, column=1, padx=10, pady=(5, 5))
+                self.lblNombre = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Nombre:")
+                self.lblNombre.grid(row=1, column=0, padx=10, pady=(10, 5))
 
-            self.lblSaldo = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Saldo disponible:")
-            self.lblSaldo.grid(row=3, column=0, padx=10, pady=(5, 5))
+                self.lblNombreVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=estudiante.name)
+                self.lblNombreVar.grid(row=1, column=1, padx=10, pady=(10, 5))
 
-            self.lblSaldoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text="")
-            self.lblSaldoVar.grid(row=3, column=1, padx=10, pady=(5, 5))
+                self.lblApellido = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Apellido:")
+                self.lblApellido.grid(row=2, column=0, padx=10, pady=(5, 5))
 
-            def volveraValidar():
-                if(self, "ventanaDatos"):
-                    self.ventanaDatos.destroy()
+                self.lblApellidoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=estudiante.last_name)
+                self.lblApellidoVar.grid(row=2, column=1, padx=10, pady=(5, 5))
 
-            self.botonVolverValidar = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=volveraValidar)
-            self.botonVolverValidar.grid(row=4, column=1, padx=10, pady=(5, 10))
+                self.lblSaldo = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Saldo disponible:")
+                self.lblSaldo.grid(row=3, column=0, padx=10, pady=(5, 5))
+
+                self.lblSaldoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=f"${estudiante.balance}")
+                self.lblSaldoVar.grid(row=3, column=1, padx=10, pady=(5, 5))
+
+                def volveraValidar():
+                    if(self, "ventanaDatos"):
+                        self.ventanaDatos.destroy()
+
+                self.botonVolverValidar = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=volveraValidar)
+                self.botonVolverValidar.grid(row=4, column=1, padx=10, pady=(5, 10))
+            else:
+                self.lblError = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Error: Estudiante no encontrado")
+                self.lblError.grid(row=0, column=0, padx=10, pady=(10, 5))
+
+                def volveraValidar():
+                    if(self, "ventanaDatos"):
+                        self.ventanaDatos.destroy()
+
+                self.botonVolverValidar = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=volveraValidar)
+                self.botonVolverValidar.grid(row=4, column=1, padx=10, pady=(5, 10))
 
         #self.codigo = self.cod_estudiante.get()
 
@@ -74,15 +92,15 @@ class VTarjeta():
             self.panelDatos, 
             text="buscar", 
             height=35, 
-            command= lambda codigo=self.cod_estudiante.get(): buscar(codigo))
+            command= lambda : buscar(self.cod_estudiante.get()))
         self.botonBuscar.grid(row=1, column=1, padx=10, pady=(5, 10))
 
         #Campos de texto Cod_tarjeta
-        self.Cod_tarjeta = customtkinter.CTkLabel(self.panelDatos, text="Código UID")
-        self.Cod_tarjeta.grid(row=2, column=0, padx=10, pady=(10, 0))
+        self.lblCod_tarjeta = customtkinter.CTkLabel(self.panelDatos, text="Código UID")
+        self.lblCod_tarjeta.grid(row=2, column=0, padx=10, pady=(10, 0))
         self.Cod_tarjeta = customtkinter.CTkEntry(self.panelDatos, height=35)
         self.Cod_tarjeta.insert(0, "Ej: 4495176584")
-        self.Cod_tarjeta.bind("<Button-1>", lambda e: self.cod_estudiante.delete(0, "end"))
+        self.Cod_tarjeta.bind("<Button-1>", lambda e: self.Cod_tarjeta.delete(0, "end"))
         self.Cod_tarjeta.grid(row=3, column=0, padx=10, pady=(5, 10))
 
         self.botonAceptar = customtkinter.CTkButton(self.panelDatos, text="Aceptar", height=35)
