@@ -190,16 +190,16 @@ class Prueba():
             self.panelEncabezadoLista = customtkinter.CTkFrame(master = self.panelPrincipal)
             self.panelEncabezadoLista.grid(row=0, column=0, padx=0, pady=0)
 
-            self.lblProductName = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Producto", height=40, width=87)
+            self.lblProductName = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Producto", height=35, width=87)
             self.lblProductName.grid(row=0, column=0, padx=0, pady=0)
 
-            self.lblProductQuantity = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Cant.", height=40, width=87)
+            self.lblProductQuantity = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Cant.", height=35, width=87)
             self.lblProductQuantity.grid(row=0, column=1, padx=0, pady=0)
 
-            self.lblProductPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Precio.", height=40, width=87)
+            self.lblProductPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Precio.", height=35, width=87)
             self.lblProductPrice.grid(row=0, column=2, padx=0, pady=0)
 
-            self.lblProductTotalPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Total.", height=40, width=87)
+            self.lblProductTotalPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Total.", height=35, width=87)
             self.lblProductTotalPrice.grid(row=0, column=3, padx=0, pady=0)
 
             self.panelListaProductosScrollConf = customtkinter.CTkScrollableFrame(master = self.panelPrincipal, height=35, width=325)
@@ -240,11 +240,11 @@ class Prueba():
             self.lblTotalGeneral.grid(row=0, column=2, padx=0, pady=0)
 
             self.panelBotones = customtkinter.CTkFrame(master = self.panelPrincipal)
-            self.panelBotones.grid(row=3, column=0, padx=0, pady=(2, 5))
+            self.panelBotones.grid(row=3, column=0, padx=0, pady=(2, 0))
 
             def aceptarCompra():
                 self.ventanaConfirmarUID = tkinter.Toplevel()
-                self.ventanaConfirmarUID.geometry("500x400")
+                self.ventanaConfirmarUID.geometry("500x250")
                 self.ventanaConfirmarUID.resizable(False, False)
 
                 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
@@ -266,14 +266,14 @@ class Prueba():
                 self.lblUID.grid(row=0, column=0, padx=0, pady=0)
 
             self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=160, command=aceptarCompra)
-            self.botonComprar.grid(row=0, column=0, padx=(10, 5), pady=5)
+            self.botonComprar.grid(row=0, column=0, padx=(10, 5), pady=10)
 
             def cancelarCerrar():
                 if(self, "ventanaConfirmar"):
                     self.ventanaConfirmar.destroy()
 
             self.botonCancelarCompra = customtkinter.CTkButton(master = self.panelBotones, text="Cancelar", height=40, width=160, command=cancelarCerrar)
-            self.botonCancelarCompra.grid(row=0, column=2, padx=(5, 10), pady=5)
+            self.botonCancelarCompra.grid(row=0, column=2, padx=(5, 10), pady=10)
             
 
         #Volver al Login
