@@ -16,21 +16,6 @@ class Producto:
     price = "price"  
     stock = "stock"  
 
-    #def __init__(self):
-    #    self
-
-    #def __init__(self, id, state, create_date, modified_date, delete_date, name, image, description, category, price, stock):
-    #    self.id = id
-    #    self.state = state
-    #    self.create_date = create_date
-    #    self.modified_date = modified_date
-    #    self.delete_date = delete_date
-    #    self.name = name
-    #    self.image = image
-    #    self.description = description
-    #    self.category = category
-    #    self.price = float(price)  # Convertir el precio a float
-    #    self.stock = int(stock)    # Convertir el stock a entero
 
     def getProducts(self):
         def deserialize_and_create_objects(data):
@@ -54,7 +39,7 @@ class Producto:
             return productos
 
     
-        res = requests.get('http://127.0.0.1:8000/tecsu/products/')
+        res = requests.get('https://servertecsu.azurewebsites.net/tecsu/products/')
 
         resultado = res.json()
 
