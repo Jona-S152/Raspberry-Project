@@ -11,7 +11,7 @@ carpeta_principal = os.path.dirname(__file__)
 carpeta_imagenes = os.path.join(carpeta_principal, "imagenes")
 
 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
 class Login:
     def __init__(self):

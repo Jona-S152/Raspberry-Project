@@ -2,18 +2,18 @@ import json
 import requests
 
 class CGeneral():
-    id_shopping = 0
-    code_students = 0
+    uid = 0
     product_detail = []
     total = 0
+    state = 0
 
-    def GuardarCompra(self, id_compra, cod_estudiante, detalles, total_compra):
+    def GuardarCompra(self, cod_estudiante, detalles, total_compra):
 
         compra = CGeneral(
-            id_shopping = id_compra,
-            code_students = cod_estudiante,
+            uid = cod_estudiante,
             product_detail = detalles,
-            total = total_compra
+            total = total_compra,
+            state = True
         )
 
         json_data = compra.to_json()

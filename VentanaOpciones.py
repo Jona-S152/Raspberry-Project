@@ -11,7 +11,7 @@ class VOpciones():
         self.ventana.resizable(False, False)
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-        customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+        customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
         self.panelPrincipal = customtkinter.CTkFrame(self.ventana)
         self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)

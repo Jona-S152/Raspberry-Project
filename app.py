@@ -3,9 +3,9 @@ import VentanaCompraProductos as Vp
 import VentanaOpciones as Vo
 import VentanaValidarTarjeta as Vt 
 
-#ventanaLogin = gui.Login()
+ventanaLogin = gui.Login()
 
-ventanaPrueba = Vp.Prueba()
+#ventanaPrueba = Vp.Prueba()
 
 #ventanaOpciones = Vo.VOpciones()
 

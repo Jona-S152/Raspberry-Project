@@ -10,6 +10,9 @@ class VTarjeta():
         self.ventana.geometry("800x475")
         self.ventana.resizable(False, False)
 
+        customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
+        customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
+
         #Configuración panel del titulo o filtro
         self.panelTitulo = customtkinter.CTkFrame(self.ventana, corner_radius=10)
         self.panelTitulo.grid(row=0, column=0, padx=(8, 0), pady=(10, 5))
@@ -36,7 +39,7 @@ class VTarjeta():
             self.ventanaDatos.resizable(False, False)
 
             customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-            customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
             self.panelDatosEstudiante = customtkinter.CTkFrame(self.ventanaDatos)
             self.panelDatosEstudiante.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -75,7 +78,7 @@ class VTarjeta():
                     self.ventanaConfirmarUID.resizable(False, False)
 
                     customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-                    customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+                    customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
                     self.panelPrincipalUID = customtkinter.CTkFrame(master = self.ventanaConfirmarUID)
                     self.panelPrincipalUID.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -89,7 +92,7 @@ class VTarjeta():
                     self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
                     self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
 
-                    self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Código de prueba", height=150, width=300)
+                    self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text=estudiante.uid, height=150, width=300)
                     self.lblUID.grid(row=0, column=0, padx=0, pady=0)
 
                     if(self, "ventanaDatos"):

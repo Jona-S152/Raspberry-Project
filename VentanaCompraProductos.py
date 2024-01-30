@@ -2,12 +2,16 @@ import tkinter
 import customtkinter
 import ProductosApi as Pa 
 import VentanaOpciones as Vo 
-import CompraProducto as clsCp 
-import CompraGeneral as clsCg
+import PedidoProducto as clsCp 
+import CompraGeneralApi as clsCg
+import PedidoDatos as Pd
 from CTkSpinbox import *
 from PIL import Image, ImageTk
 from io import BytesIO
 import requests
+import EstudiantesApi as Ea 
+
+
 
 #import RPi.GPIO as GPIO
 #import SimpleMFRC522
@@ -20,9 +24,11 @@ class Prueba():
         self.app.resizable(False, False)
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-        customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+        customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
         self.lista_productos = []
+
+        self.listaToPedido = []
 
         #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
         #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
@@ -77,7 +83,7 @@ class Prueba():
             self.ventanaCantidad.resizable(False, False)
 
             customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-            customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
             self.panelPrincipal = customtkinter.CTkFrame(self.ventanaCantidad)
             self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -205,7 +211,7 @@ class Prueba():
                 self.ventanaConfirmar.resizable(False, False)
 
                 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-                customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+                customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
                 self.panelPrincipal = customtkinter.CTkFrame(master = self.ventanaConfirmar)
                 self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -271,7 +277,7 @@ class Prueba():
                 self.ventanaConfirmarUID.resizable(False, False)
 
                 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-                customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+                customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
 
                 self.panelPrincipalUID = customtkinter.CTkFrame(master = self.ventanaConfirmarUID)
                 self.panelPrincipalUID.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -285,6 +291,20 @@ class Prueba():
                 self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
                 self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
 
+                def ComprarPedido():
+                    for item in self.lista_productos:
+                        pedido = Pd.Pedido()
+                        pedido.products = item.product_id
+                        pedido.quantity = item.quantity
+                        pedido.total = item.total
+                        pedido.state = True
+
+                        self.listaToPedido.append(pedido)
+
+                clsEstudiante = Ea.Student()
+
+                estudiante = clsEstudiante.getStudentByCod("0963258741")
+
                 #self.reader = SimpleMFRC522.SimpleMFRC522()
 #
                 #self.card_id = 0
@@ -296,7 +316,7 @@ class Prueba():
                 #finally:
                 #    GPIO.cleanup()
 
-                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Código de prueba", height=150, width=300)
+                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text=estudiante.uid, height=150, width=300)
                 self.lblUID.grid(row=0, column=0, padx=0, pady=0)
 
             self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=160, command=aceptarCompra)
