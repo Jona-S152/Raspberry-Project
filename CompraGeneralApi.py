@@ -50,9 +50,9 @@ class CGeneral():
 
         response = requests.post(url, data=json_data, headers=headers)
 
-        #res = response.json()
+        res = response.json()
 
-        print(response)
+        print(res)
 
         return compra
 
