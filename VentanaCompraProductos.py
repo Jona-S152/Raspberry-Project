@@ -30,6 +30,8 @@ class Prueba():
 
         self.listaToPedido = []
 
+        self.estudiante = None
+
         #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
         #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
 
@@ -291,19 +293,56 @@ class Prueba():
                 self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
                 self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
 
-                def ComprarPedido():
-                    for item in self.lista_productos:
-                        pedido = Pd.Pedido()
-                        pedido.products = item.product_id
-                        pedido.quantity = item.quantity
-                        pedido.total = item.total
-                        pedido.state = True
+                for item in self.lista_productos:
+                    pedido = Pd.Pedido()
+                    pedido.products = item.product_id
+                    pedido.quantity = item.quantity
+                    pedido.total = item.total
+                    pedido.state = True
+                    self.listaToPedido.append(pedido)
+                
+                #for item in self.listaToPedido:
+                #    print(item.products)
+                #    print(item.quantity)
+                #    print(item.total)
+                #    print(item.state)
 
-                        self.listaToPedido.append(pedido)
+                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Código de estudiante", height=40, width=300)
+                self.lblUID.grid(row=0, column=0, padx=0, pady=(10, 5))
 
-                clsEstudiante = Ea.Student()
+                self.iCodEstudent = customtkinter.CTkEntry(self.panelCodigoUID)
+                self.iCodEstudent.insert(0, "Ej: 0915668421")
+                self.iCodEstudent.bind("<Button-1>", lambda e: self.iCodEstudent.delete(0, "end"))
+                self.iCodEstudent.grid(row=1, column=0, padx=0, pady=(5, 5))
 
-                estudiante = clsEstudiante.getStudentByCod("0963258741")
+                def EstudianteCompra():
+                    clsEstudiante = Ea.Student()
+
+                    self.estudiante = clsEstudiante.getStudentByCod(self.iCodEstudent.get())
+
+                    if(self.estudiante != None):
+                        clsCompra = clsCg.CGeneral()
+
+                        ejecutarCompra = clsCompra.GuardarCompra(self.estudiante.uid, self.listaToPedido, self.totalCompra)
+                        #print(ejecutarCompra)
+                        print(ejecutarCompra.uid)
+                        print(ejecutarCompra.total)
+                        print(ejecutarCompra.state)
+                        print("Detalles")
+                        
+                        for item in ejecutarCompra.product_detail:
+                            
+                            print(item)
+                            #print(item.quantity)
+                            #print(item.total)
+                            #print(item.state)
+                        #print(ejecutarCompra.uid)
+                        #print(ejecutarCompra.product_detail)
+                        #print(ejecutarCompra.total)
+                        #print(ejecutarCompra.state)
+
+                self.botonComprarFinal = customtkinter.CTkButton(master = self.panelCodigoUID, text="Comprar", height=40, width=160, command=EstudianteCompra)
+                self.botonComprarFinal.grid(row=2, column=0, padx=0, pady=(5, 10))
 
                 #self.reader = SimpleMFRC522.SimpleMFRC522()
 #
@@ -316,8 +355,7 @@ class Prueba():
                 #finally:
                 #    GPIO.cleanup()
 
-                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text=estudiante.uid, height=150, width=300)
-                self.lblUID.grid(row=0, column=0, padx=0, pady=0)
+                
 
             self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=160, command=aceptarCompra)
             self.botonComprar.grid(row=0, column=0, padx=(10, 5), pady=10)
