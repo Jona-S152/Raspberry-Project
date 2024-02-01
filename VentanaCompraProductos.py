@@ -103,6 +103,7 @@ class Prueba():
             #Guarda la cantidad para mostrarla luego en el carrito
             def aceptar_cantidad():
                 if self.lista_productos:
+                    
                     self.idEncontrado = False
 
                     for item in self.lista_productos:
