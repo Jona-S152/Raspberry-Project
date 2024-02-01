@@ -83,19 +83,14 @@ class Prueba():
             self.ventanaCantidad = tkinter.Toplevel()
             self.ventanaCantidad.geometry("500x250")
             self.ventanaCantidad.resizable(False, False)
-
             customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
-
+            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, gree
             self.panelPrincipal = customtkinter.CTkFrame(self.ventanaCantidad)
             self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-
             #self.panelTitulo = customtkinter.CTkFrame(self.panelPrincipal)
-            #self.panelTitulo.grid(row=0, column=0, padx=10, pady=(10, 5))
-
+            #self.panelTitulo.grid(row=0, column=0, padx=10, pady=(10, 5)
             self.nombreProducto = customtkinter.CTkLabel(self.panelPrincipal, text=value.name)
             self.nombreProducto.grid(row=0, column=0, padx=10, pady=(10, 5))
-                
             #self.spin_var = customtkinter.IntVar()
             self.spinbox = CTkSpinbox(
                 master= self.panelPrincipal, 
@@ -104,36 +99,76 @@ class Prueba():
                 max_value =value.stock,
                 scroll_value = 1)
             self.spinbox.grid(row=1, column=0, padx=10, pady=(5, 5))
-            #self.slider.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-
+            #self.slider.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER
             #Guarda la cantidad para mostrarla luego en el carrito
             def aceptar_cantidad():
-                self.cantidad_producto = self.spinbox.get()
-                agregarAlCarrito(value, self.cantidad_producto)#Agrega los detalles a la seccion carrito
+                if self.lista_productos:
+                    self.idEncontrado = False
+
+                    for item in self.lista_productos:
+                        if value.id == item.product_id:
+                            self.ventanaValidarIdProducto = tkinter.Toplevel()
+                            self.ventanaValidarIdProducto.geometry("500x250")
+                            self.ventanaValidarIdProducto.resizable(False, False)
+
+                            customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
+                            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
+
+                            self.panelPrincipal = customtkinter.CTkFrame(self.ventanaValidarIdProducto)
+                            self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+                            self.nombreProducto = customtkinter.CTkLabel(self.panelPrincipal, text="El producto ya existe en su carrito de compra")
+                            self.nombreProducto.grid(row=0, column=0, padx=10, pady=(10, 5))
+
+                            def cancelar():
+                                if(self, "ventanaCantidad" and "ventanaValidarIdProducto"):
+                                    self.ventanaValidarIdProducto.destroy()
+                                    self.ventanaCantidad.destroy()
+
+                            self.botonCancelar = customtkinter.CTkButton(self.panelPrincipal, text="Volver", height=35, command=cancelar)
+                            self.botonCancelar.grid(row=1, column=0, padx=10, pady=(5, 10))
+
+                            self.idEncontrado = True
+                            break
+                        
+                    if not self.idEncontrado:
+                        self.cantidad_producto = self.spinbox.get()
+                        agregarAlCarrito(value, self.cantidad_producto)#Agrega los detalles a la seccion carrit
+                        self.varCp = clsCp.ProductoPedido()
+                        self.varCp.product_id = value.id
+                        self.varCp.product_name = value.name
+                        self.varCp.quantity = self.cantidad_producto
+                        self.varCp.price = value.price
+                        total_redondear = float(value.price) * self.cantidad_producto
+                        self.varCp.total = round(total_redondear, 2)
+                        #Agrega a la lista de productos
+                        self.lista_productos.append(self.varCp)
+                        for item in self.lista_productos:
+                            print(f"Id: {item.product_id}, Producto: {item.product_name}, cant: {item.quantity}, precio: {item.price}, total: {item.total}")
+                        print("***********************************************************")
+                        if(self, "ventanaCantidad"):
+                            self.ventanaCantidad.destroy()
+                else:
                 
-                self.varCp = clsCp.ProductoPedido()
-                self.varCp.product_id = value.id
-                self.varCp.product_name = value.name
-                self.varCp.quantity = self.cantidad_producto
-                self.varCp.price = value.price
-                total_redondear = float(value.price) * self.cantidad_producto
-                self.varCp.total = round(total_redondear, 2)
-
-                #Agrega a la lista de productos
-                self.lista_productos.append(self.varCp)
-
-                for item in self.lista_productos:
-                    print(f"Id: {item.product_id}, Producto: {item.product_name}, cant: {item.quantity}, precio: {item.price}, total: {item.total}")
-                    
-                print("***********************************************************")
-
-                if(self, "ventanaCantidad"):
-                    self.ventanaCantidad.destroy()
-            
+                    self.cantidad_producto = self.spinbox.get()
+                    agregarAlCarrito(value, self.cantidad_producto)#Agrega los detalles a la seccion carrit
+                    self.varCp = clsCp.ProductoPedido()
+                    self.varCp.product_id = value.id
+                    self.varCp.product_name = value.name
+                    self.varCp.quantity = self.cantidad_producto
+                    self.varCp.price = value.price
+                    total_redondear = float(value.price) * self.cantidad_producto
+                    self.varCp.total = round(total_redondear, 2)
+                    #Agrega a la lista de productos
+                    self.lista_productos.append(self.varCp)
+                    for item in self.lista_productos:
+                        print(f"Id: {item.product_id}, Producto: {item.product_name}, cant: {item.quantity}, precio: {item.price}, total: {item.total}")
+                    print("***********************************************************")
+                    if(self, "ventanaCantidad"):
+                        self.ventanaCantidad.destroy()
             def cancelar():
                 if(self, "ventanaCantidad"):
                     self.ventanaCantidad.destroy()
-
             #Boton de envio
             self.boton = customtkinter.CTkButton(self.panelPrincipal, text="Aceptar", height=35, command=aceptar_cantidad)
             self.boton.grid(row=2, column=0, padx=10, pady=(5, 5))
@@ -194,11 +229,11 @@ class Prueba():
         self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Cant.", height=40, width=55)
         self.lblNombreCantidad.grid(row=0, column=1, padx=0, pady=0)
 
-        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Precio", height=40, width=40)
-        self.lblNombreCantidad.grid(row=0, column=2, padx=0, pady=0)
+        self.lblNombrePrecio = customtkinter.CTkLabel(master = self.panelEncabezado, text="Precio", height=40, width=40)
+        self.lblNombrePrecio.grid(row=0, column=2, padx=0, pady=0)
 
-        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Total", height=40, width=70)
-        self.lblNombreCantidad.grid(row=0, column=3, padx=0, pady=0)
+        self.lblNombreTotal = customtkinter.CTkLabel(master = self.panelEncabezado, text="Total", height=40, width=70)
+        self.lblNombreTotal.grid(row=0, column=3, padx=0, pady=0)
 
         self.lblEliminar = customtkinter.CTkLabel(master = self.panelEncabezado, text="", height=40, width=50)
         self.lblEliminar.grid(row=0, column=4, padx=0, pady=0)
@@ -333,13 +368,16 @@ class Prueba():
                         for item in ejecutarCompra.product_detail:
                             
                             print(item)
-                            #print(item.quantity)
-                            #print(item.total)
-                            #print(item.state)
-                        #print(ejecutarCompra.uid)
-                        #print(ejecutarCompra.product_detail)
-                        #print(ejecutarCompra.total)
-                        #print(ejecutarCompra.state)
+
+                        self.listaToPedido.clear()
+
+                        self.lista_productos.clear()
+
+                        self.estudiante = None
+
+                        if(self, "app"):
+                            self.app.destroy()
+                        volver = Vo.VOpciones()
 
                 self.botonComprarFinal = customtkinter.CTkButton(master = self.panelCodigoUID, text="Comprar", height=40, width=160, command=EstudianteCompra)
                 self.botonComprarFinal.grid(row=2, column=0, padx=0, pady=(5, 10))
