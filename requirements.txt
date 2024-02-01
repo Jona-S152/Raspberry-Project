@@ -2,3 +2,4 @@ CTkSpinbox==1.1.0
 customtkinter==0.3
 tkinter==8.6
 requests==2.31.0
+CTkMessagebox==2.5
