@@ -7,10 +7,10 @@ class CGeneral():
     total = 0
     state = 0
 
-    def GuardarCompra(self, cod_estudiante, detalles, total_compra):
+    def GuardarCompra(self, cod_uid, detalles, total_compra):
 
         compra = CGeneral()
-        compra.uid = cod_estudiante
+        compra.uid = cod_uid
 
         compra.product_detail = [
             {
@@ -54,29 +54,6 @@ class CGeneral():
 
         print(res)
 
-        return compra
+        return response
 
 
-#FORMATO PARAMETROS
-#{
-#  "id_shopping": 2,
-#  "uid": "0321654987",
-#  "product_detail": [
-#    {
-#      "id": 1,
-#      "products": 1,
-#      "quantity": 2,
-#      "total": 2.0,
-#      "state": true
-#    },
-#    {
-#      "id": 2,
-#      "products": 2,
-#      "quantity": 3,
-#      "total": 1.50,
-#      "state": true
-#    }
-#  ],
-#  "total": 3.75,
-#  "state": true
-#}

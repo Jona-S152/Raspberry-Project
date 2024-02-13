@@ -131,7 +131,7 @@ class VTarjeta():
                 self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
                 self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
 
-                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Esperando codigo...", height=150, width=300)
+                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Esperando tarjeta...", height=150, width=300)
                 self.lblUID.grid(row=0, column=0, padx=0, pady=0)
 
                 def startRead():

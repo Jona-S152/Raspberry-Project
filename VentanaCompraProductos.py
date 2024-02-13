@@ -12,10 +12,8 @@ import requests
 import EstudiantesApi as Ea 
 from CTkMessagebox import CTkMessagebox
 
-
-
-#import RPi.GPIO as GPIO
-#import SimpleMFRC522
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
 
 class Prueba():
 
@@ -34,10 +32,10 @@ class Prueba():
 
         self.estudiante = None
 
-        #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
-        #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
-
         self.cantidad_producto = 0
+
+        self.UID = None
+
         #Configuración panel del titulo o filtro
         self.panelFiltro = customtkinter.CTkFrame(self.app, corner_radius=10)
         self.panelFiltro.grid(row=0, column=0, padx=(10, 0), pady=(10, 5))
@@ -103,7 +101,7 @@ class Prueba():
                 max_value =value.stock,
                 scroll_value = 1)
             self.spinbox.grid(row=1, column=0, padx=10, pady=(5, 5))
-            #self.slider.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER
+            
             #Guarda la cantidad para mostrarla luego en el carrito
             def aceptar_cantidad():
                 if self.lista_productos:
@@ -339,38 +337,31 @@ class Prueba():
                     pedido.state = True
                     self.listaToPedido.append(pedido)
                 
-                #for item in self.listaToPedido:
-                #    print(item.products)
-                #    print(item.quantity)
-                #    print(item.total)
-                #    print(item.state)
 
-                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Código de estudiante", height=40, width=300)
-                self.lblUID.grid(row=0, column=0, padx=0, pady=(10, 5))
+                self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Esperando tarjeta...", height=40, width=300)
+                self.lblUID.grid(row=0, column=0, padx=0, pady=0)
 
-                self.iCodEstudent = customtkinter.CTkEntry(self.panelCodigoUID)
-                self.iCodEstudent.insert(0, "Ej: 0915668421")
-                self.iCodEstudent.bind("<Button-1>", lambda e: self.iCodEstudent.delete(0, "end"))
-                self.iCodEstudent.grid(row=1, column=0, padx=0, pady=(5, 5))
+                def startRead():
+                    reader = SimpleMFRC522()
+
+                    try:
+                        id, text = reader.read()
+                        self.UID = id
+                        print(f"Id de la tarjeta: { id }")
+                    finally:
+                        GPIO.cleanup()
+                        if(self, "NotaComprarFinal"):
+                            self.NotaComprarFinal.destroy()
+
+                self.ventanaConfirmarUID.after(2000, startRead)
 
                 def EstudianteCompra():
-                    clsEstudiante = Ea.Student()
 
-                    self.estudiante = clsEstudiante.getStudentByCod(self.iCodEstudent.get())
+                    if(self.UID != None):
 
-                    if(self.estudiante != None):
                         clsCompra = clsCg.CGeneral()
 
-                        ejecutarCompra = clsCompra.GuardarCompra(self.estudiante.uid, self.listaToPedido, self.totalCompra)
-                        #print(ejecutarCompra)
-                        print(ejecutarCompra.uid)
-                        print(ejecutarCompra.total)
-                        print(ejecutarCompra.state)
-                        print("Detalles")
-                        
-                        for item in ejecutarCompra.product_detail:
-                            
-                            print(item)
+                        ejecutarCompra = clsCompra.GuardarCompra(self.UID , self.listaToPedido, self.totalCompra)
 
                         self.listaToPedido.clear()
 
@@ -378,24 +369,70 @@ class Prueba():
 
                         self.estudiante = None
 
-                        if(self, "app"):
-                            self.app.destroy()
-                        volver = Vo.VOpciones()
+                        self.cantidad_producto = 0
 
-                self.botonComprarFinal = customtkinter.CTkButton(master = self.panelCodigoUID, text="Comprar", height=40, width=160, command=EstudianteCompra)
-                self.botonComprarFinal.grid(row=2, column=0, padx=0, pady=(5, 10))
+                        self.UID = None
 
-                #self.reader = SimpleMFRC522.SimpleMFRC522()
-#
-                #self.card_id = 0
-#
-                #try:
-                #    while True:
-                #        self.card_id = self.reader.read()
-                #        print(self.card_id)
-                #finally:
-                #    GPIO.cleanup()
+                        message_data = ejecutarCompra.json()
 
+                        self.message = ''
+
+                        if 'message' in message_data:
+                            self.message = message_data['message']
+                        else:
+                            self.message = 'Error en la orden de compra'
+
+                        def close():
+                            if(self, "app"):
+                                self.app.destroy()
+                            volver = Vo.VOpciones()
+
+                        def show_checkmark():
+                            if(self, "ventanaConfirmarUID"):
+                                self.ventanaConfirmarUID.destroy()
+
+                            msg = CTkMessagebox(title="Compra exitosa", message=self.message, 
+                                          icon="check", option_1="Aceptar")
+                            if msg.get() == "Aceptar":
+                                self.message = ''
+                                close()
+
+                        def show_error():
+                            if(self, "ventanaConfirmarUID"):
+                                self.ventanaConfirmarUID.destroy()
+
+                            CTkMessagebox(title="Error", message=self.message,
+                                          icon="cancel")
+                            self.message = ''
+                            #close()
+                            
+                        def show_new_warning():
+                            if(self, "ventanaConfirmarUID"):
+                                self.ventanaConfirmarUID.destroy()
+
+                            msg = CTkMessagebox(title="Advertencia!", message=self.message,
+                                                icon="warning", option_1="Cancelar", option_2="Reintentar")
+                            if msg.get() == "Cancelar":
+                                self.message = ''
+                                close()
+                            if msg.get() == "Reintentar":
+                                print("Reintentar")
+                                self.message = ''
+                                aceptarCompra()
+                            
+                        if ejecutarCompra.status_code == 201:
+                            show_checkmark()
+                        elif ejecutarCompra.status_code == 400:
+                            show_new_warning()
+                        else:
+                            show_error()
+
+                        
+
+                self.ventanaConfirmarUID.after(5000, EstudianteCompra)
+
+                self.NotaComprarFinal = customtkinter.CTkLabel(master = self.panelCodigoUID, text="Nota. Al colocar su tarjeta se completara la compra.", height=40, width=160)
+                self.NotaComprarFinal.grid(row=2, column=0, padx=0, pady=(5, 10))
                 
 
             self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=160, command=aceptarCompra)

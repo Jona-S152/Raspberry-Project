@@ -9,6 +9,7 @@ class VOpciones():
         self.ventana = customtkinter.CTk()
         self.ventana.geometry("500x250")
         self.ventana.resizable(False, False)
+        self.ventana.title("Opciones")
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
         customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
