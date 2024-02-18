@@ -11,6 +11,7 @@ from io import BytesIO
 import requests
 import EstudiantesApi as Ea 
 from CTkMessagebox import CTkMessagebox
+import ManejarImgCache as Manejadordeimagen
 
 
 
@@ -33,6 +34,11 @@ class Prueba():
         self.listaToPedido = []
 
         self.estudiante = None
+
+        #Instancia objeto producto
+        clsProducto = Pa.Producto()
+        #Metodo para obtener una lista de productos
+        listaProductos = clsProducto.getProducts()
 
         #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
         #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
@@ -174,30 +180,31 @@ class Prueba():
             self.botonCancelar.grid(row=3, column=0, padx=10, pady=(5, 10))
 
         contador = 0
-        #Instancia objeto producto
-        clsProducto = Pa.Producto()
-        #Metodo para obtener una lista de productos
-        listaProductos = clsProducto.getProducts()
+        
+        self.manejador_imagenes = Manejadordeimagen.ManejadorImagenes()
 
         #Para cada producto que exista en la lista de productos se creará un panel con su información
         for producto in listaProductos:
 
-            response = requests.get(producto.image)
-            img_data = BytesIO(response.content)
-            imagen = Image.open(img_data)
-            # Redimensionar la imagen para ajustarse al panel manteniendo la relación de aspecto
-            imagen.thumbnail((100, 100), Image.ANTIALIAS)
+            # Obtener la imagen desde la caché o descargarla si es necesario
+            imagen = self.manejador_imagenes.obtener_imagen_por_producto(producto)
 
-            foto = customtkinter.CTkImage(light_image=imagen,
-            dark_image=imagen,
-            size=(100, 100))
+            #response = requests.get(producto.image)
+            #img_data = BytesIO(response.content)
+            #imagen = Image.open(img_data)
+            ## Redimensionar la imagen para ajustarse al panel manteniendo la relación de aspecto
+            #imagen.thumbnail((100, 100), Image.ANTIALIAS)
+#
+            #foto = customtkinter.CTkImage(light_image=imagen,
+            #dark_image=imagen,
+            #size=(100, 100))
 
             if(producto.stock > 0):
                 panel = customtkinter.CTkFrame(
                     master = self.panelProductos)
                 #Etiqueta para mostrar la imagen
                 etiqueta = customtkinter.CTkLabel(master=panel, 
-                image=foto, 
+                image=imagen, 
                 text = "")
                 etiqueta.pack(pady=1)
                 nombre = customtkinter.CTkLabel(
