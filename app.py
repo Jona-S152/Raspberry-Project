@@ -9,4 +9,4 @@ ventanaLogin = gui.Login()
 
 #ventanaOpciones = Vo.VOpciones()
 
-# ventanaTarjeta = Vt.VTarjeta()
+#ventanaTarjeta = Vt.VTarjeta()

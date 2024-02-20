@@ -11,6 +11,7 @@ from io import BytesIO
 import requests
 import EstudiantesApi as Ea 
 from CTkMessagebox import CTkMessagebox
+import ManejarImgCache as Manejadordeimagen
 
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
@@ -20,7 +21,7 @@ class Prueba():
     def __init__(self):
         self.app = customtkinter.CTk()
         self.app.geometry("800x475")
-        self.app.resizable(False, False)
+        self.app.resizable(0, 0)
         self.app.title("Compra")
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
@@ -177,25 +178,20 @@ class Prueba():
         #Metodo para obtener una lista de productos
         listaProductos = clsProducto.getProducts()
 
+        self.manejador_imagenes = Manejadordeimagen.ManejadorImagenes()
+
         #Para cada producto que exista en la lista de productos se creará un panel con su información
         for producto in listaProductos:
 
-            response = requests.get(producto.image)
-            img_data = BytesIO(response.content)
-            imagen = Image.open(img_data)
-            # Redimensionar la imagen para ajustarse al panel manteniendo la relación de aspecto
-            imagen.thumbnail((100, 100), Image.ANTIALIAS)
-
-            foto = customtkinter.CTkImage(light_image=imagen,
-            dark_image=imagen,
-            size=(100, 100))
+            # Obtener la imagen desde la caché o descargarla si es necesario
+            imagen = self.manejador_imagenes.obtener_imagen_por_producto(producto)
 
             if(producto.stock > 0):
                 panel = customtkinter.CTkFrame(
                     master = self.panelProductos)
                 #Etiqueta para mostrar la imagen
                 etiqueta = customtkinter.CTkLabel(master=panel, 
-                image=foto, 
+                image=imagen, 
                 text = "")
                 etiqueta.pack(pady=1)
                 nombre = customtkinter.CTkLabel(
