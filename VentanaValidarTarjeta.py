@@ -3,12 +3,14 @@ import customtkinter
 import requests
 import VentanaOpciones as Vo 
 import EstudiantesApi as Ea 
+from CTkMessagebox import CTkMessagebox
 
 class VTarjeta():
     def __init__(self):
         self.ventana = customtkinter.CTk()
         self.ventana.geometry("800x475")
         self.ventana.resizable(False, False)
+        self.ventana.title("Validación de tarjeta")
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
         customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -33,10 +35,15 @@ class VTarjeta():
         self.cod_estudiante.bind("<Button-1>", lambda e: self.cod_estudiante.delete(0, "end"))
         self.cod_estudiante.grid(row=1, column=0, padx=10, pady=(5, 10))
 
+        clsEstudiante = Ea.Student()
+
+        self.estudiante = None
+
         def buscar(value):#Agregar parametro para obtener el estudiante por su id
             self.ventanaDatos = tkinter.Toplevel()
             self.ventanaDatos.geometry("500x250")
             self.ventanaDatos.resizable(False, False)
+            self.ventanaDatos.title("Validación de Estudiante")
 
             customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
             customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -44,74 +51,74 @@ class VTarjeta():
             self.panelDatosEstudiante = customtkinter.CTkFrame(self.ventanaDatos)
             self.panelDatosEstudiante.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-            clsEstudiante = Ea.Student()
+            
 
-            estudiante = clsEstudiante.getStudentByCod(value)
+            self.estudiante = clsEstudiante.getStudentByCod(value)
 
-            print(estudiante)
-
-            if(estudiante != None):
+            if(self.estudiante != None):
                 self.lblDatos = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Datos del estudiante")
                 self.lblDatos.grid(row=0, column=0, padx=10, pady=(10, 0))
 
                 self.lblNombre = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Nombre:")
                 self.lblNombre.grid(row=1, column=0, padx=10, pady=(10, 5))
 
-                self.lblNombreVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=estudiante.name)
+                self.lblNombreVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=self.estudiante.name)
                 self.lblNombreVar.grid(row=1, column=1, padx=10, pady=(10, 5))
 
                 self.lblApellido = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Apellido:")
                 self.lblApellido.grid(row=2, column=0, padx=10, pady=(5, 5))
 
-                self.lblApellidoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=estudiante.last_name)
+                self.lblApellidoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=self.estudiante.last_name)
                 self.lblApellidoVar.grid(row=2, column=1, padx=10, pady=(5, 5))
 
                 self.lblSaldo = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Saldo disponible:")
                 self.lblSaldo.grid(row=3, column=0, padx=10, pady=(5, 5))
 
-                self.lblSaldoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=f"${estudiante.balance}")
+                self.lblSaldoVar = customtkinter.CTkLabel(self.panelDatosEstudiante, text=f"${self.estudiante.balance}")
                 self.lblSaldoVar.grid(row=3, column=1, padx=10, pady=(5, 5)) 
 
-                def getUID():
-                    self.ventanaConfirmarUID = tkinter.Toplevel()
-                    self.ventanaConfirmarUID.geometry("500x250")
-                    self.ventanaConfirmarUID.resizable(False, False)
+                #def getUID():
+                #    self.ventanaConfirmarUID = tkinter.Toplevel()
+                #    self.ventanaConfirmarUID.geometry("500x250")
+                #    self.ventanaConfirmarUID.resizable(False, False)
+#
+                #    customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
+                #    customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
+#
+                #    self.panelPrincipalUID = customtkinter.CTkFrame(master = self.ventanaConfirmarUID)
+                #    self.panelPrincipalUID.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+#
+                #    self.panelTituloUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
+                #    self.panelTituloUID.grid(row=0, column=0, padx=10, pady=(10, 5))
+#
+                #    self.lblTitulo = customtkinter.CTkLabel(master = self.panelTituloUID, text="Por favor, coloque su tarjeta en el lector", height=40, width=300)
+                #    self.lblTitulo.grid(row=0, column=0, padx=0, pady=0)
+#
+                #    self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
+                #    self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
+#
+                #    self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text=estudiante.uid, height=150, width=300)
+                #    self.lblUID.grid(row=0, column=0, padx=0, pady=0)
+#
+                #    if(self, "ventanaDatos"):
+                #        self.ventanaDatos.destroy()
+#
+                #    #self.reader = SimpleMFRC522.SimpleMFRC522()
+#   #
+                #    #self.card_id = 0
+#   #
+                #    #try:
+                #    #    while True:
+                #    #        self.card_id = self.reader.read()
+                #    #        print(self.card_id)
+                #    #finally:
+                #    #    GPIO.cleanup()
 
-                    customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-                    customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
-
-                    self.panelPrincipalUID = customtkinter.CTkFrame(master = self.ventanaConfirmarUID)
-                    self.panelPrincipalUID.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-
-                    self.panelTituloUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
-                    self.panelTituloUID.grid(row=0, column=0, padx=10, pady=(10, 5))
-
-                    self.lblTitulo = customtkinter.CTkLabel(master = self.panelTituloUID, text="Por favor, coloque su tarjeta en el lector", height=40, width=300)
-                    self.lblTitulo.grid(row=0, column=0, padx=0, pady=0)
-
-                    self.panelCodigoUID = customtkinter.CTkFrame(master = self.panelPrincipalUID)
-                    self.panelCodigoUID.grid(row=1, column=0, padx=10, pady=(5, 10))
-
-                    self.lblUID = customtkinter.CTkLabel(master = self.panelCodigoUID, text=estudiante.uid, height=150, width=300)
-                    self.lblUID.grid(row=0, column=0, padx=0, pady=0)
-
+                def ok():
                     if(self, "ventanaDatos"):
                         self.ventanaDatos.destroy()
 
-                    #self.reader = SimpleMFRC522.SimpleMFRC522()
-#   
-                    #self.card_id = 0
-#   
-                    #try:
-                    #    while True:
-                    #        self.card_id = self.reader.read()
-                    #        print(self.card_id)
-                    #finally:
-                    #    GPIO.cleanup()
-
-                    
-
-                self.botonConfirmarUID = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=getUID)
+                self.botonConfirmarUID = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=ok)
                 self.botonConfirmarUID.grid(row=4, column=0, padx=(10, 5), pady=(5, 10))
 
                 def volveraValidar():
@@ -121,15 +128,18 @@ class VTarjeta():
                 self.botonVolverValidar = customtkinter.CTkButton(self.panelDatosEstudiante, text="Volver", height=35, command=volveraValidar)
                 self.botonVolverValidar.grid(row=4, column=1, padx=10, pady=(5, 10))
             else:
-                self.lblError = customtkinter.CTkLabel(self.panelDatosEstudiante, text="Error: Estudiante no encontrado")
-                self.lblError.grid(row=0, column=0, padx=(5, 10), pady=(10, 5))
+                def show_warning():
+                    # Show some positive message with the checkmark icon
+                    msg = CTkMessagebox(
+                        title="Advertencia!",
+                        message="Estudiante no encontrado",
+                        icon="warning",
+                        option_1="Aceptar")
 
-                def volveraValidar():
-                    if(self, "ventanaDatos"):
-                        self.ventanaDatos.destroy()
-
-                self.botonVolverValidar = customtkinter.CTkButton(self.panelDatosEstudiante, text="Aceptar", height=35, command=volveraValidar)
-                self.botonVolverValidar.grid(row=4, column=1, padx=10, pady=(5, 10))
+                show_warning()
+                    
+                if(self, "ventanaDatos"):
+                    self.ventanaDatos.destroy()
 
         #self.codigo = self.cod_estudiante.get()
 
@@ -148,10 +158,34 @@ class VTarjeta():
         self.Cod_tarjeta.bind("<Button-1>", lambda e: self.Cod_tarjeta.delete(0, "end"))
         self.Cod_tarjeta.grid(row=3, column=0, padx=10, pady=(5, 10))
 
+        def asignarUID():
+            def show_warning():
+                # Show some positive message with the checkmark icon
+                msg = CTkMessagebox(
+                    title="Advertencia!",
+                    message="Ingrese el uid",
+                    icon="warning",
+                    option_1="Aceptar")
+            
+            #print(self.Cod_tarjeta.get())
+
+            if (self.Cod_tarjeta.get() == "Ej: 4495176584" or self.Cod_tarjeta.get() == ""):
+                
+                show_warning()
+            
+            else:
+                #print(self.Cod_tarjeta.get())
+                self.estudiante.uid = self.Cod_tarjeta.get()
+                clsEstudiante.updateStudent(self.estudiante)
+                if(self, "ventana"):
+                    self.ventana.destroy()
+                acceso = Vo.VOpciones()
+
         self.botonAceptar = customtkinter.CTkButton(
             self.panelDatos, 
             text="Aceptar", 
-            height=35
+            height=35, 
+            command = asignarUID
             )
         self.botonAceptar.grid(row=3, column=1, padx=10, pady=(5, 10))
 

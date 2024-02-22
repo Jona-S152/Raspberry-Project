@@ -51,12 +51,40 @@ class Student:
 
                 estudianteResultado = deserialize(resultado)
 
+                print(estudianteResultado.uid)
+
                 return estudianteResultado
         else:
             print(f"Error en la solicitud GET. Código de estado: {res.status_code}")
 
         
+    def updateStudent(self, value):
+        def to_json():
+            # Convertir la instancia de la clase a un diccionario
+            data_dict = {
+                "cedula_estudiante": value.cedula_estudiante,
+                "uid": value.uid,
+                "name": value.name,
+                "last_name": value.last_name
+            }
+            
+            # Convertir el diccionario a una cadena JSON
+            json_data = json.dumps(data_dict)
+            return json_data
 
+        json_data = to_json()
+
+        print(json_data)
+
+        url = f'https://servertecsu.azurewebsites.net/tecsu/estudent/update/{value.id}/'
+
+        headers = {'Content-Type': 'application/json'}
+
+        response = requests.put(url, data=json_data, headers=headers)
+
+        res = response.text
+
+        print(res)
 #print("id:" , estudiantesResultado.id)
 #print("code_students: " , estudiantesResultado.code_students)
 #print("name: " , estudiantesResultado.name)

@@ -4,17 +4,17 @@ import datetime
 #LISTAR TODOS LOS PRODUCTOS
 class Producto:
 
-    id = "id"
-    state = "state"
-    create_date = "create_date"
-    modified_date = "modified_date"
-    delete_date = "delete_date"
-    name = "name"
-    image = "image"
-    description = "description"
-    category = "category"
-    price = "price"  
-    stock = "stock"  
+    id = ""
+    state = ""
+    create_date = ""
+    modified_date = ""
+    delete_date = ""
+    name = ""
+    image = ""
+    description = ""
+    category = ""
+    price = ""  
+    stock = ""  
 
 
     def getProducts(self):

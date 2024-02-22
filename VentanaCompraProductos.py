@@ -10,6 +10,8 @@ from PIL import Image, ImageTk
 from io import BytesIO
 import requests
 import EstudiantesApi as Ea 
+from CTkMessagebox import CTkMessagebox
+import ManejarImgCache as Manejadordeimagen
 
 
 
@@ -22,6 +24,7 @@ class Prueba():
         self.app = customtkinter.CTk()
         self.app.geometry("800x475")
         self.app.resizable(False, False)
+        self.app.title("Compra")
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
         customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -31,6 +34,11 @@ class Prueba():
         self.listaToPedido = []
 
         self.estudiante = None
+
+        #Instancia objeto producto
+        clsProducto = Pa.Producto()
+        #Metodo para obtener una lista de productos
+        listaProductos = clsProducto.getProducts()
 
         #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
         #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
@@ -83,6 +91,8 @@ class Prueba():
             self.ventanaCantidad = tkinter.Toplevel()
             self.ventanaCantidad.geometry("500x250")
             self.ventanaCantidad.resizable(False, False)
+            self.ventanaCantidad.title("Selección de cantidad")
+
             customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
             customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, gree
             self.panelPrincipal = customtkinter.CTkFrame(self.ventanaCantidad)
@@ -108,28 +118,21 @@ class Prueba():
 
                     for item in self.lista_productos:
                         if value.id == item.product_id:
-                            self.ventanaValidarIdProducto = tkinter.Toplevel()
-                            self.ventanaValidarIdProducto.geometry("500x250")
-                            self.ventanaValidarIdProducto.resizable(False, False)
+                            def show_warning():
+                                # Show some positive message with the checkmark icon
+                                msg = CTkMessagebox(
+                                    title="Advertencia!",
+                                    message="El producto ya existe en su carrito de compra",
+                                    icon="warning",
+                                    option_1="Aceptar")
 
-                            customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
-                            customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
-
-                            self.panelPrincipal = customtkinter.CTkFrame(self.ventanaValidarIdProducto)
-                            self.panelPrincipal.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-
-                            self.nombreProducto = customtkinter.CTkLabel(self.panelPrincipal, text="El producto ya existe en su carrito de compra")
-                            self.nombreProducto.grid(row=0, column=0, padx=10, pady=(10, 5))
-
-                            def cancelar():
-                                if(self, "ventanaCantidad" and "ventanaValidarIdProducto"):
-                                    self.ventanaValidarIdProducto.destroy()
+                                if(self, "ventanaCantidad"):
                                     self.ventanaCantidad.destroy()
 
-                            self.botonCancelar = customtkinter.CTkButton(self.panelPrincipal, text="Volver", height=35, command=cancelar)
-                            self.botonCancelar.grid(row=1, column=0, padx=10, pady=(5, 10))
-
                             self.idEncontrado = True
+
+                            show_warning()
+
                             break
                         
                     if not self.idEncontrado:
@@ -177,30 +180,31 @@ class Prueba():
             self.botonCancelar.grid(row=3, column=0, padx=10, pady=(5, 10))
 
         contador = 0
-        #Instancia objeto producto
-        clsProducto = Pa.Producto()
-        #Metodo para obtener una lista de productos
-        listaProductos = clsProducto.getProducts()
+        
+        self.manejador_imagenes = Manejadordeimagen.ManejadorImagenes()
 
         #Para cada producto que exista en la lista de productos se creará un panel con su información
         for producto in listaProductos:
 
-            response = requests.get(producto.image)
-            img_data = BytesIO(response.content)
-            imagen = Image.open(img_data)
-            # Redimensionar la imagen para ajustarse al panel manteniendo la relación de aspecto
-            imagen.thumbnail((100, 100), Image.ANTIALIAS)
+            # Obtener la imagen desde la caché o descargarla si es necesario
+            imagen = self.manejador_imagenes.obtener_imagen_por_producto(producto)
 
-            foto = customtkinter.CTkImage(light_image=imagen,
-            dark_image=imagen,
-            size=(100, 100))
+            #response = requests.get(producto.image)
+            #img_data = BytesIO(response.content)
+            #imagen = Image.open(img_data)
+            ## Redimensionar la imagen para ajustarse al panel manteniendo la relación de aspecto
+            #imagen.thumbnail((100, 100), Image.ANTIALIAS)
+#
+            #foto = customtkinter.CTkImage(light_image=imagen,
+            #dark_image=imagen,
+            #size=(100, 100))
 
             if(producto.stock > 0):
                 panel = customtkinter.CTkFrame(
                     master = self.panelProductos)
                 #Etiqueta para mostrar la imagen
                 etiqueta = customtkinter.CTkLabel(master=panel, 
-                image=foto, 
+                image=imagen, 
                 text = "")
                 etiqueta.pack(pady=1)
                 nombre = customtkinter.CTkLabel(
@@ -247,6 +251,7 @@ class Prueba():
                 self.ventanaConfirmar = tkinter.Toplevel()
                 self.ventanaConfirmar.geometry("500x400")
                 self.ventanaConfirmar.resizable(False, False)
+                self.ventanaConfirmar.title("Confirmación de compra")
 
                 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
                 customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -310,9 +315,13 @@ class Prueba():
             self.panelBotones.grid(row=3, column=0, padx=0, pady=(2, 0))
 
             def aceptarCompra():
+                if(self, "ventanaConfirmar"):
+                    self.ventanaConfirmar.destroy()
+                    
                 self.ventanaConfirmarUID = tkinter.Toplevel()
                 self.ventanaConfirmarUID.geometry("500x250")
                 self.ventanaConfirmarUID.resizable(False, False)
+                self.ventanaConfirmarUID.title("Verificación UID")
 
                 customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
                 customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -409,6 +418,11 @@ class Prueba():
 
         #Volver al Login
         def button_volver():
+            self.listaToPedido.clear()
+
+            self.lista_productos.clear()
+
+            self.estudiante = None
             if(self, "app"):
                 self.app.destroy()
             volver = Vo.VOpciones()

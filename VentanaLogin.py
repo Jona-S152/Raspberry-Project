@@ -3,6 +3,7 @@ import customtkinter
 import os
 from PIL import ImageTk, Image
 import VentanaOpciones as Vp
+from CTkMessagebox import CTkMessagebox
 
 # ---> Rutas
 # Carpeta principal del proyecto
@@ -20,6 +21,7 @@ class Login:
         #self.root.iconbitmap(os.path.join(carpeta_imagenes, "privacidad.png"))
         self.root.geometry("300x420")
         self.root.resizable(False, False)
+        self.root.title("Inicio de sesion")
 
         # Contenido de la ventana principal
         # Logo
@@ -42,8 +44,8 @@ class Login:
 
         #Campos de texto Contraseña
         customtkinter.CTkLabel(self.root, text="Contraseña").pack(pady=(5, 0))
-        self.contrasena = customtkinter.CTkEntry(self.root)
-        self.contrasena.insert(0, "*********")
+        self.contrasena = customtkinter.CTkEntry(self.root, show="•")
+        self.contrasena.insert(0, "••••••••••")
         self.contrasena.bind("<Button-1>", lambda e: self.contrasena.delete(0, "end"))
         self.contrasena.pack()
 
@@ -53,7 +55,13 @@ class Login:
                     self.root.destroy()
                 Acceso = Vp.VOpciones()
             else:
-                print("Credenciales incorrectas")
+                def show_error():
+                    # Show some positive message with the checkmark icon
+                    CTkMessagebox(
+                        title="Error", 
+                        message="Credenciales incorrectas", icon="cancel")
+
+                show_error()
             
 
         #Boton de envio
