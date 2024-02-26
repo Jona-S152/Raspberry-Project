@@ -20,9 +20,27 @@ class Prueba():
 
     def __init__(self):
         self.app = customtkinter.CTk()
-        self.app.geometry("800x475")
-        self.app.resizable(0, 0)
+        self.app.geometry("1060x625")
+        self.app.resizable(False, False)
         self.app.title("Compra")
+
+        
+        #  Actualizamos todo el contenido de la ventana (la ventana pude crecer si se le agrega
+        #  mas widgets).Esto actualiza el ancho y alto de la ventana en caso de crecer.
+
+        #  Obtenemos el largo y  ancho de la pantalla
+        wtotal = self.app.winfo_screenwidth()
+        htotal = self.app.winfo_screenheight()
+        #  Guardamos el largo y alto de la ventana
+        wventana = 1060
+        hventana = 625
+
+        #  Aplicamos la siguiente formula para calcular donde debería posicionarse
+        pwidth = round(wtotal/2-wventana/2)
+        pheight = round(htotal/2-hventana/2)
+
+        #  Se lo aplicamos a la geometría de la ventana
+        self.app.geometry(str(wventana)+"x"+str(hventana)+"+"+str(pwidth)+"+"+str(pheight))
 
         customtkinter.set_appearance_mode("system")  # Modes: system (default), light, dark
         customtkinter.set_default_color_theme("green")  # Themes: blue (default), dark-blue, green
@@ -33,38 +51,43 @@ class Prueba():
 
         self.estudiante = None
 
+        #Instancia objeto producto
+        clsProducto = Pa.Producto()
+        #Metodo para obtener una lista de productos
+        listaProductos = clsProducto.getProducts()
+
+        #self.panelVentana = customtkinter.CTkFrame(self.app, corner_radius=10, height=480, width=800)
+        #self.panelVentana.place(relx=0, rely=0, anchor=tkinter.CENTER)
+
         self.cantidad_producto = 0
-
-        self.UID = None
-
         #Configuración panel del titulo o filtro
         self.panelFiltro = customtkinter.CTkFrame(self.app, corner_radius=10)
-        self.panelFiltro.grid(row=0, column=0, padx=(10, 0), pady=(10, 5))
+        self.panelFiltro.grid(row=0, column=0, padx=(10, 5), pady=(10, 5))
         #Label del titulo
-        self.titulo = customtkinter.CTkLabel(master = self.panelFiltro, text="PRODUCTOS", height=100, width=465).pack()
+        self.titulo = customtkinter.CTkLabel(master = self.panelFiltro, text="PRODUCTOS", height=50, width=625).pack()
         #Configuración panel del carrito
         self.panelCarrito = customtkinter.CTkFrame(self.app, corner_radius=10)
-        self.panelCarrito.grid(row=0, column=1, padx=(0, 1), pady=(10, 5))
+        self.panelCarrito.grid(row=0, column=1, padx=(5, 10), pady=(10, 5))
         #Label del titulo
-        self.titulo = customtkinter.CTkLabel(master = self.panelCarrito, text="CARRITO", height=100, width=300).pack()
+        self.titulo = customtkinter.CTkLabel(master = self.panelCarrito, text="CARRITO", height=50, width=405).pack()
 
         #Panel para mostrar los productos de la base de datos
-        self.panelProductos = customtkinter.CTkScrollableFrame(master = self.app, height=330, width=443)
-        self.panelProductos.grid(row=1, column=0, padx=(15, 5), pady=(5, 10))
+        self.panelProductos = customtkinter.CTkScrollableFrame(master = self.app, height=530, width=603)
+        self.panelProductos.grid(row=1, column=0, padx=(10, 5), pady=(5, 10))
 
         self.cont = 0
 
         def agregarAlCarrito(value, quantity):
             self.panelProductDetail = customtkinter.CTkFrame(self.panelListaProductosScroll, height=40, width=245)
-            self.panelProductDetail.grid(row=self.cont, column=0, pady=2)
+            self.panelProductDetail.grid(row=self.cont, column=0, padx=0, pady=2)
 
-            self.lblNameProduct = customtkinter.CTkLabel(self.panelProductDetail, text=value.name, height=40, width=80)
+            self.lblNameProduct = customtkinter.CTkLabel(self.panelProductDetail, text=value.name, height=40, width=170)
             self.lblNameProduct.grid(row=0, column=0, padx=0, pady=0)
 
-            self.lblCant = customtkinter.CTkLabel(self.panelProductDetail, text=quantity, height=40, width=55)
+            self.lblCant = customtkinter.CTkLabel(self.panelProductDetail, text=quantity, height=40, width=65)
             self.lblCant.grid(row=0, column=1, padx=0, pady=0)
 
-            self.lblPrecio = customtkinter.CTkLabel(self.panelProductDetail, text=value.price, height=40, width=43)
+            self.lblPrecio = customtkinter.CTkLabel(self.panelProductDetail, text=value.price, height=40, width=45)
             self.lblPrecio.grid(row=0, column=2, padx=0, pady=0)
 
             total_rounded = float(value.price) * quantity
@@ -78,7 +101,7 @@ class Prueba():
             self.btnEliminar.grid(row=0, column=4, padx=0, pady=0)
             
             self.cont += 1
-        
+
         #Metodo para abrir el spinbox para seleccionar la cantidad del producto
         def getCantidad(value):#value es el producto seleccionado para obtener el stock de tal producto
             self.ventanaCantidad = tkinter.Toplevel()
@@ -203,22 +226,23 @@ class Prueba():
                 comprar = customtkinter.CTkButton(
                     master = panel, 
                     text="Seleccionar",
-                    height=35, 
+                    height=35,
+                    width=144, 
                     command = lambda p=producto: getCantidad(p)).pack()#GetCantidad obtiene el objeto(producto) seleccionado y lo envia como parametro para la ventana de seleccion de cantidad
-                panel.grid(row=contador//3, column=contador%3, padx=2.5, pady=2.5)
+                panel.grid(row=contador//4, column=contador%4, padx=2.5, pady=2.5)
 
                 contador += 1
         
-        self.panelListaProductos = customtkinter.CTkFrame(master = self.app, height=249, width=220)
-        self.panelListaProductos.grid(row=1, column=1, padx=(0, 1), pady=(5, 10))
+        self.panelListaProductos = customtkinter.CTkFrame(master = self.app, height=249, width=320)
+        self.panelListaProductos.grid(row=1, column=1, padx=(5, 10), pady=(5, 10))
 
         self.panelEncabezado = customtkinter.CTkFrame(master = self.panelListaProductos)
         self.panelEncabezado.grid(row=0, column=0, padx=0, pady=0)
 
-        self.lblNombreProducto = customtkinter.CTkLabel(master = self.panelEncabezado, text="Producto", height=40, width=87)
+        self.lblNombreProducto = customtkinter.CTkLabel(master = self.panelEncabezado, text="Producto", height=40, width=170)
         self.lblNombreProducto.grid(row=0, column=0, padx=0, pady=0)
 
-        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Cant.", height=40, width=55)
+        self.lblNombreCantidad = customtkinter.CTkLabel(master = self.panelEncabezado, text="Cant.", height=40, width=75)
         self.lblNombreCantidad.grid(row=0, column=1, padx=0, pady=0)
 
         self.lblNombrePrecio = customtkinter.CTkLabel(master = self.panelEncabezado, text="Precio", height=40, width=40)
@@ -230,8 +254,8 @@ class Prueba():
         self.lblEliminar = customtkinter.CTkLabel(master = self.panelEncabezado, text="", height=40, width=50)
         self.lblEliminar.grid(row=0, column=4, padx=0, pady=0)
 
-        self.panelListaProductosScroll = customtkinter.CTkScrollableFrame(master = self.panelListaProductos, height=200, width=280)
-        self.panelListaProductosScroll.grid(row=1, column=0, padx=(0, 1), pady=(0, 10))
+        self.panelListaProductosScroll = customtkinter.CTkScrollableFrame(master = self.panelListaProductos, height=400, width=382)
+        self.panelListaProductosScroll.grid(row=1, column=0, padx=0, pady=(0, 10))
 
         def confirmar():
             if self.lista_productos:
@@ -249,34 +273,34 @@ class Prueba():
                 self.panelEncabezadoLista = customtkinter.CTkFrame(master = self.panelPrincipal)
                 self.panelEncabezadoLista.grid(row=0, column=0, padx=0, pady=0)
 
-                self.lblProductName = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Producto", height=35, width=87)
+                self.lblProductName = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Producto", height=35, width=170)
                 self.lblProductName.grid(row=0, column=0, padx=0, pady=0)
 
-                self.lblProductQuantity = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Cant.", height=35, width=87)
+                self.lblProductQuantity = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Cant.", height=35, width=85)
                 self.lblProductQuantity.grid(row=0, column=1, padx=0, pady=0)
 
-                self.lblProductPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Precio.", height=35, width=87)
+                self.lblProductPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Precio.", height=35, width=85)
                 self.lblProductPrice.grid(row=0, column=2, padx=0, pady=0)
 
-                self.lblProductTotalPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Total.", height=35, width=87)
+                self.lblProductTotalPrice = customtkinter.CTkLabel(master = self.panelEncabezadoLista, text="Total.", height=35, width=92)
                 self.lblProductTotalPrice.grid(row=0, column=3, padx=0, pady=0)
 
-                self.panelListaProductosScrollConf = customtkinter.CTkScrollableFrame(master = self.panelPrincipal, height=35, width=325)
+                self.panelListaProductosScrollConf = customtkinter.CTkScrollableFrame(master = self.panelPrincipal, height=35, width=410)
                 self.panelListaProductosScrollConf.grid(row=1, column=0, padx=0, pady=(0, 2))
 
                 #MOSTRAR PRODUCTOS DEL CARRITO
                 self.contadorVentana = 0
                 for producto in self.lista_productos:
-                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.product_name, height=40, width=78)
+                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.product_name, height=40, width=165)
                     self.lblNombre.grid(row=self.contadorVentana, column=0, padx=0, pady=0)
 
-                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.quantity, height=40, width=90)
+                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.quantity, height=40, width=85)
                     self.lblNombre.grid(row=self.contadorVentana, column=1, padx=0, pady=0)
 
-                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.price, height=40, width=88)
+                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=producto.price, height=40, width=85)
                     self.lblNombre.grid(row=self.contadorVentana, column=2, padx=0, pady=0)
 
-                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=f"${producto.total}", height=40, width=87)
+                    self.lblNombre = customtkinter.CTkLabel(master = self.panelListaProductosScrollConf, text=f"${producto.total}", height=40, width=92)
                     self.lblNombre.grid(row=self.contadorVentana, column=3, padx=0, pady=0)
 
                     self.contadorVentana += 1
@@ -287,15 +311,14 @@ class Prueba():
             self.lblTotalCompra = customtkinter.CTkLabel(master = self.panelTotal, text="Total: ", height=30, width=75)
             self.lblTotalCompra.grid(row=0, column=0, padx=0, pady=0)
 
-            self.lblEspacio = customtkinter.CTkLabel(master = self.panelTotal, text="", height=30, width=204)
+            self.lblEspacio = customtkinter.CTkLabel(master = self.panelTotal, text="", height=30, width=290)
             self.lblEspacio.grid(row=0, column=1, padx=0, pady=0)
-
             self.totalCompra = 0
 
             for item in self.lista_productos:
                 self.totalCompra += item.total
 
-            self.lblTotalGeneral = customtkinter.CTkLabel(master = self.panelTotal, text=f"${round(self.totalCompra, 2)}", height=40, width=70)
+            self.lblTotalGeneral = customtkinter.CTkLabel(master = self.panelTotal, text=f"${round(self.totalCompra, 2)}", height=40, width=65)
             self.lblTotalGeneral.grid(row=0, column=2, padx=0, pady=0)
 
             self.panelBotones = customtkinter.CTkFrame(master = self.panelPrincipal)
@@ -431,14 +454,14 @@ class Prueba():
                 self.NotaComprarFinal.grid(row=2, column=0, padx=0, pady=(5, 10))
                 
 
-            self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=160, command=aceptarCompra)
+            self.botonComprar = customtkinter.CTkButton(master = self.panelBotones, text="Comprar", height=40, width=201, command=aceptarCompra)
             self.botonComprar.grid(row=0, column=0, padx=(10, 5), pady=10)
 
             def cancelarCerrar():
                 if(self, "ventanaConfirmar"):
                     self.ventanaConfirmar.destroy()
 
-            self.botonCancelarCompra = customtkinter.CTkButton(master = self.panelBotones, text="Cancelar", height=40, width=160, command=cancelarCerrar)
+            self.botonCancelarCompra = customtkinter.CTkButton(master = self.panelBotones, text="Cancelar", height=40, width=201, command=cancelarCerrar)
             self.botonCancelarCompra.grid(row=0, column=2, padx=(5, 10), pady=10)
             
 
