@@ -4,7 +4,7 @@ import VentanaOpciones as Vo
 import VentanaValidarTarjeta as Vt 
 from VentanaReportes import Reporte
 
-#ventanaLogin = gui.Login()
+ventanaLogin = gui.Login()
 
 #ventanaPrueba = Vp.Prueba()
 
@@ -12,4 +12,4 @@ from VentanaReportes import Reporte
 
 #ventanaTarjeta = Vt.VTarjeta()
 
-Reporte()
+#Reporte()
